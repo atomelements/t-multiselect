@@ -1,0 +1,110 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/t-shared-components/jquery.html">
+<script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
+<link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
+
+<dom-module id="t-multiselect">
+    <style>
+    :host {
+        display: block;
+        box-sizing: border-box;
+    }
+    </style>
+    <template>
+        <select id="select" style="width: 100%" multiple="multiple">
+            <template is="dom-repeat" items="{{data}}" as="item">
+                <option value="{{item.id}}" selected="{{item.selected}}">{{item.text}}</option>
+            </template>
+        </select>
+    </template>
+</dom-module>
+<script>
+var sAPI = {
+    ajax: {
+        url: '',
+        dataType: 'json',
+        delay: 500,
+        //process request
+        data: function(params) {
+            return {
+                query: params.term, // search term
+                page: params.page
+            };
+        },
+        //process response
+        processResults: function(data, params) {
+            return {
+                results: data.items
+            };
+        },
+    },
+    tags: true,
+    cache: true,
+    placeholder: '',
+    minimumInputLength: 3,
+    data: [],
+    //process list template
+    templateResult: function(result) {
+        return result.text;
+    },
+    //process item selection template
+    templateSelection: function(result) {
+        return result.text;
+    }
+};
+
+Polymer({
+
+    is: 't-multiselect',
+
+    properties: {
+        //[{id: '', text: ''}]
+        data: {
+            type: Array,
+            value: null
+        },
+
+        placeholder: {
+            type: String,
+            value: ''
+        },
+
+        auto: {
+            type: Boolean,
+            value: false
+        },
+
+        select2Hash: {
+            type: Object,
+            value: function() {
+                return {};
+            }
+        },
+
+
+    },
+
+    ready: function() {
+        if (this.auto) {
+            this.createSelect2();
+        }
+    },
+
+    /*
+    Use when data is fetched from remote source
+     */
+    createSelect2: function() {    		
+        var obj = $(this.$.select).select2(this._getSelect2Hash());
+        console.log('select2 instancec', obj);
+    },
+
+    _getSelect2Hash: function() {
+        var component = this;
+        var sHash = sAPI;
+        sHash = $.extend(sHash, component.select2Hash);
+        sHash.placeholder = component.placeholder;
+
+        return sHash;
+    }
+});
+</script>
