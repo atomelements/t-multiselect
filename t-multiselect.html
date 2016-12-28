@@ -55,7 +55,9 @@
     }
     </style>
     <template>
-        <label class="label" hidden="[[!label]]">[[label]]</label>
+    <template is="dom-if" if="[[label]]">
+        <label class="label">[[label]]</label>
+    </template>
         <select id="select" style="width: 100%" multiple="multiple">
             <template is="dom-repeat" items="{{data}}" as="item">
                 <option value="{{item.id}}" selected="{{item.selected}}">{{item.text}}</option>
