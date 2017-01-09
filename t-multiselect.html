@@ -58,8 +58,8 @@
     <template is="dom-if" if="[[label]]">
         <label class="label">[[label]]</label>
     </template>
-        <select id="select" style="width: 100%" multiple="multiple">
-            <template is="dom-repeat" items="{{data}}" as="item">
+        <select id="select" style="width: 100%" multiple$="{{!noMultiple}}">
+            <template is="dom-repeat" items="{{preData}}" as="item">
                 <option value="{{item.id}}" selected="{{item.selected}}">{{item.text}}</option>
             </template>
         </select>
@@ -84,7 +84,7 @@ var sAPI = {
             };
         },
     },
-    tags: true,
+    tags: false,
     cache: true,
     placeholder: '',
     minimumInputLength: 3,
@@ -104,8 +104,9 @@ Polymer({
     is: 't-multiselect',
 
     properties: {
-        //[{id: '', text: ''}]
-        data: {
+        //[{id: '', text: '', selected: true}]
+        //use this only to prepopulate, and use 'selectedOptions' to retreive selected suggestions
+        preData: {
             type: Array,
             value: null
         },
@@ -113,6 +114,11 @@ Polymer({
         placeholder: {
             type: String,
             value: ''
+        },
+
+        noMultiple: {
+            type: Boolean,
+            value: false
         },
 
         auto: {
@@ -125,8 +131,7 @@ Polymer({
             value: function() {
                 return {};
             }
-        },
-
+        }
 
     },
 
@@ -136,19 +141,38 @@ Polymer({
         }
     },
 
+
+    get selectedOptions(){
+        try{
+            return $(this.$.select).select2('data');
+        }
+        catch(e){
+            console.log(e);
+            return [];
+        }
+    },
+
     /*
     Use when data is fetched from remote source
      */
-    createSelect2: function() {    		
-        var obj = $(this.$.select).select2(this._getSelect2Hash());
-        console.log('select2 instancec', obj);
+    createSelect2: function() {
+        var instance = $(this.$.select).data('select2');
+        if(instance){
+            $(this.$.select).select2('destroy');
+        }    		
+        
+        instance = $(this.$.select).select2(this._getSelect2Hash());
+        
+
+        this.fire('select2-create');
+        console.log('select2 instancec', instance);
     },
 
     _getSelect2Hash: function() {
         var component = this;
         var sHash = sAPI;
         sHash = $.extend(sHash, component.select2Hash);
-        sHash.placeholder = component.placeholder;
+        sHash.placeholder = component.placeholder;        
 
         return sHash;
     }
