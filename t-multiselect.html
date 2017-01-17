@@ -3,6 +3,7 @@
 <script src="../select2/dist/js/select2.full.min.js"></script>
 <link rel="stylesheet" href="../select2/dist/css/select2.min.css">
     <style >
+        .select2-container--default .select2-selection--single .select2-selection__rendered,
         .select2-container.select2-container--default.select2-container--open{
             font-family: var(--primary-font-family,sans-serif);
             color: var(--multiselect-content-color, #777);
@@ -24,18 +25,18 @@
         margin-bottom: var(--form-label-margin,10px);
     }
 
-    ::content .select2-container--default .select2-selection--multiple .select2-selection__choice{
+    ::content .select2-container--default .select2-selection .select2-selection__choice{
         font-size: var(--multiselect-tag-size,12px);
         color: var(--multiselect-tag-color,rgba(0,0,0,0.54));
         padding: 3px 6px;
         margin-bottom: 5px;
     }
-    ::content .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
+    ::content .select2-container--default .select2-selection .select2-selection__choice__remove{
         order: 2;
         margin-right: 0px;
         margin-left: 4px;
     }
-    ::content .select2-container .select2-selection--multiple,
+    ::content .select2-container .select2-selection,
     ::content  .select2-container .select2-selection__choice{
         display: -webkit-flex;
         display: -moz-flex;
@@ -45,10 +46,16 @@
         -ms-flex-align: center;
         -webkit-align-items: center;
         align-items: center;
-
     }
-    ::content .select2-container--default .select2-selection--multiple,
-    ::content .select2-container--default.select2-container--focus .select2-selection--multiple{
+    ::content .select2-container{
+        outline: 0;
+    }
+    ::content .select2-container--default .select2-selection--single .select2-selection__arrow{
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    ::content .select2-container--default .select2-selection,
+    ::content .select2-container--default.select2-container--focus .select2-selection{
         border-color: var(--input-border-color,#ccc);
         min-height: var(--multiselect-height,40px);
         border-radius: 0;
